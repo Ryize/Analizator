@@ -125,8 +125,8 @@ def login() -> Response or str:
            str: шаблон страницы index.html или register
     """
 
-    if request.method == 'GET':
-        return render_template('login.html')
+    # if request.method == 'GET':
+    #     return render_template('login.html')
 
     # Проверка наличия введённых данных авторизации
     if request.method == 'POST':
@@ -148,14 +148,14 @@ def login() -> Response or str:
         # Если данные неверны, выводим сообщение "Ошибка авторизации"
         print('Ошибка авторизации!')
         # Если данные неверны, перенаправляем на страницу регистрации
-        return render_template('login.html',)
-    #     return redirect(url_for('register'))
-    # return render_template('login.html')
+        return render_template('register.html',)
+        # return redirect(url_for('register'))
+    return render_template('login.html')
 
 
 # Обработчик главной страницы, показывает список всех пользователей
 # и возвращает страницу с формой отправки сообщений
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index')
 @login_required
 # Функция главной страницы
 def index() -> str:
