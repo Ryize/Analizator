@@ -1,41 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/stile_index.css') }}"/>
-    <script defer src="{{ url_for('static', filename='js/index_script.js') }}"></script>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/stile_index.css') }}"/>
+    <script src="{{ url_for('static', filename='js/index_script.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
 </head>
 <body>
 <sectio class="nav">
-  <h1>АНАЛИЗАТОР</h1>
-  <h3 class="span loader"><span class="m">B</span><span class="m">E</span><span class="m">N</span><span class="m">E</span><span class="m">F</span><span class="m">I</span><span class="m">T</span><span class="m">S</span><span class="m">&nbsp;</span><span class="m">o</span><span class="m">f</span><span class="m">&nbsp;</span><span class="m">T</span><span class="m">E</span><span class="m">C</span><span class="m">H</span><span class="m">N</span><span class="m">O</span><span class="m">L</span><span class="m">O</span><span class="m">G</span><span class="m">I</span><span class="m">E</span><span class="m">S</span></h3>
-  <div class="nav-container"><a class="nav-tab" href="#tab-svelte">ЗОЛОТО</a><a class="nav-tab" href="#tab-esbuild">КРИПТА</a><a class="nav-tab" href="#tab-next">ДОЛЛАР</a><a class="nav-tab" href="#tab-typescript">ЕВРО</a><a class="nav-tab" href="#tab-vite">НЕФТЬ</a><span class="nav-tab-slider"></span></div>
+    <h1>А Н А Л И З А Т О Р</h1>
+    <h3 class="span loader"><span class="m">B</span><span
+            class="m">E</span><span class="m">N</span><span
+            class="m">E</span><span class="m">F</span><span
+            class="m">I</span><span class="m">T</span><span
+            class="m">S</span><span class="m">&nbsp;</span><span
+            class="m">o</span><span class="m">f</span><span
+            class="m">&nbsp;</span><span class="m">T</span><span
+            class="m">E</span><span class="m">C</span><span
+            class="m">H</span><span class="m">N</span><span
+            class="m">O</span><span class="m">L</span><span
+            class="m">O</span><span class="m">G</span><span
+            class="m">I</span><span class="m">E</span><span class="m">S</span>
+    </h3>
+    <div class="nav-container"><a class="nav-tab" href="#tab-svelte">ЗОЛОТО</a><a
+            class="nav-tab" href="#tab-esbuild">КРИПТА</a><a class="nav-tab"
+                                                             href="#tab-next">ДОЛЛАР</a><a
+            class="nav-tab" href="#tab-typescript">ЕВРО</a><a class="nav-tab"
+                                                              href="#tab-vite">НЕФТЬ</a><span
+            class="nav-tab-slider"></span></div>
 </sectio>
 <main class="main">
-  <section class="slider" id="tab-svelte">
-    <h1>ЗОЛОТО</h1>
-    <h2>при увеличении или уменьшении золотовалютных запасов банки способны изменять стоимость золота</h2>
-  </section>
-  <section class="slider" id="tab-esbuild">
-    <h1>КРИПТА</h1>
-    <h2>чем выше спрос и ниже предложение на криптовалюту, тем выше будет её цена</h2>
-  </section>
-  <section class="slider" id="tab-next">
-    <h1>ДОЛЛАР</h1>
-    <h2>спрос и предложение на валютном рынке</h2>
-  </section>
-  <section class="slider" id="tab-typescript">
-    <h1>ЕВРО</h1>
-    <h2>рост цен на энергию и продукты питания вызывает инфляцию в Еврозоне, что выше целевого уровня Европейского центрального банка</h2>
-  </section>
-  <section class="slider" id="tab-vite">
-    <h1>НЕФТЬ</h1>
-    <h2>дефицит сырья на нефтяном рынке способствует подорожанию, а избыток запасов, превышающих спрос, ведет к удешевлению</h2>
-  </section>
+    <section class="slider" id="tab-svelte">
+        <h1>ЗОЛОТО</h1>
+        <h2>при увеличении или уменьшении золотовалютных запасов банки способны
+            изменять стоимость золота</h2>
+    </section>
+    <section class="slider" id="tab-esbuild">
+        <h1>КРИПТА</h1>
+        <h2>чем выше спрос и ниже предложение на криптовалюту, тем выше будет
+            её цена</h2>
+    </section>
+    <section class="slider" id="tab-next">
+        <h1>ДОЛЛАР</h1>
+        <h2>спрос и предложение на валютном рынке</h2>
+    </section>
+    <section class="slider" id="tab-typescript">
+        <h1>ЕВРО</h1>
+        <h2>рост цен на энергию и продукты питания вызывает инфляцию в
+            Еврозоне, что выше целевого уровня Европейского центрального
+            банка</h2>
+    </section>
+    <section class="slider" id="tab-vite">
+        <h1>НЕФТЬ</h1>
+        <h2>дефицит сырья на нефтяном рынке способствует подорожанию, а избыток
+            запасов, превышающих спрос, ведет к удешевлению</h2>
+    </section>
 </main>
-<canvas class="background"></canvas><!-- SGVsbG8hIE15IG5hbWUgaXMgU2FyYSBNYXphbC4gV2VsY29tZSB0byBteSBDb2RlUGVuIQ== -->
+<canvas class="background"></canvas>
+<!-- SGVsbG8hIE15IG5hbWUgaXMgU2FyYSBNYXphbC4gV2VsY29tZSB0byBteSBDb2RlUGVuIQ== -->
 </body>
 </html>
