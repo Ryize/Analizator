@@ -187,7 +187,7 @@ def logout() -> Response or str:
 
     # Выход из учётной записи и перенаправление на страницу регистрации
     logout_user()
-    print('Вы вышли!')
+    print('Вы успешно зарлогинились!')
     return redirect(url_for('login'))
 
 
