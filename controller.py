@@ -1,8 +1,8 @@
 import string
 import random
 
-from flask import render_template, request, redirect, url_for, session, flash, make_response
-from flask_login import logout_user, login_required, login_user, current_user
+from flask import render_template, request, redirect, url_for
+from flask_login import logout_user, login_required, login_user
 from flask.wrappers import Response
 
 from mail import send_email
