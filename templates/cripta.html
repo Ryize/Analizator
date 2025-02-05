@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Анализ криптобиржи</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 900px; margin: auto; }
+        img { width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Анализ криптобиржи</h1>
+
+    <h2>Текущие цены</h2>
+    <ul>
+        {% for symbol, price in prices.items() %}
+            <li>{{ symbol }}: ${{ price }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>График</h2>
+    <img src="data:image/png;base64,{{ plot }}" alt="График цен">
+
+    <h2>Новости криптобиржи</h2>
+    <ul>
+        {% for article in news %}
+            <li><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
