@@ -1,3 +1,5 @@
+"""Модуль с моделями"""
+
 from datetime import datetime
 from flask_login import UserMixin
 
@@ -21,6 +23,13 @@ class EmailConfirm(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(80), unique=True, nullable=False)
     code = db.Column(db.String(33), unique=True, nullable=False)
+
+
+# Создание медели для хранения статьи
+class Article(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(300), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 # Создание БД, добавить всё
