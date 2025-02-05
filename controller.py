@@ -1,15 +1,21 @@
-import string
+"""Модуль с роутами"""
+
 import random
+import string
 
 from flask import render_template, request, redirect, url_for
-from flask_login import logout_user, login_required, login_user
 from flask.wrappers import Response
+from flask_login import logout_user, login_required, login_user
 
-from mail import send_email
 from app import app, db
 from business_logic.check_fata import check_auth_data
+from mail import send_email
 from models import User, EmailConfirm
 
+from parser import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
+    ParsBinance
+from price_cripta import get_crypto_prices, generate_plot, get_crypto_news
+from save_parser import Save_Parser_BD
 
 
 @app.route('/email-confirm/<code>')
@@ -155,7 +161,7 @@ def login() -> Response or str:
 
 # Обработчик главной страницы, показывает список всех пользователей
 # и возвращает страницу с формой отправки сообщений
-@app.route('/index')
+@app.route('/index', methods=['GET'])
 @login_required
 # Функция главной страницы
 def index() -> str:
@@ -171,6 +177,47 @@ def index() -> str:
     return render_template('index.html')
 
 
+@app.route('/cripta', methods=['GET'])
+@login_required
+# Функция для перехода на страницу крипта
+def cripta() -> str:
+    """
+        Страница с информацией о Крипте
+
+        Авторизованный пользователь переходит на страницу крипта
+        cripta.html.
+
+        Returns:
+            str: шаблон страницы cripta.html
+    """
+
+    prices = get_crypto_prices()
+    plot = generate_plot(prices)
+    news = get_crypto_news()
+
+    pars_block_chain24 = ParsBlock_Chain24()
+    new_title_block_chain24 = pars_block_chain24.pars()
+    save_news_bd_block_chain24 = Save_Parser_BD(new_title_block_chain24)
+    save_news_bd_block_chain24.save_pars()
+
+    pars_ria_ru = ParsRia_ru()
+    new_title_ria_ru = pars_ria_ru.pars()
+    save_news_bd_ria_ru = Save_Parser_BD(new_title_ria_ru)
+    save_news_bd_ria_ru.save_pars()
+
+    pars_kommersant_ru = ParsKommersant_ru()
+    new_title_kommersant_ru = pars_kommersant_ru.pars()
+    save_news_bd_kommersant_ru = Save_Parser_BD(new_title_kommersant_ru)
+    save_news_bd_kommersant_ru.save_pars()
+
+    pars_binance = ParsBinance()
+    new_title_binance = pars_binance.pars()
+    save_news_bd_binance = Save_Parser_BD(new_title_binance)
+    save_news_bd_binance.save_pars()
+
+    return render_template('cripta.html', prices=prices, plot=plot, news=news)
+
+
 @app.route('/logout')
 @login_required
 # Функция выхода из учётной записи и перенаправления на страницу регистрации
@@ -179,7 +226,7 @@ def logout() -> Response or str:
        Разлогиниться
 
        Выход из учётной записи и перенаправление на страницу регистрации;
-
+р
        Returns:
            str: шаблон страницы index.html
            Response: вызывает функцию register
@@ -187,7 +234,7 @@ def logout() -> Response or str:
 
     # Выход из учётной записи и перенаправление на страницу регистрации
     logout_user()
-    print('Вы успешно зарлогинились!')
+    print('Вы успешно разлогинились!')
     return redirect(url_for('login'))
 
 
