@@ -3,18 +3,19 @@
 import random
 import string
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, send_file
 from flask.wrappers import Response
 from flask_login import logout_user, login_required, login_user
 
 from app import app, db
 from business_logic.check_fata import check_auth_data
+from gruph_cripta import get_crypto_data, gruph_crypto_price
 from mail import send_email
 from models import User, EmailConfirm
 
 from parser import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
     ParsBinance
-from price_cripta import get_crypto_prices, generate_plot, get_crypto_news
+from price_cripta import get_crypto_prices, get_crypto_news
 from save_parser import Save_Parser_BD
 
 
@@ -177,7 +178,22 @@ def index() -> str:
     return render_template('index.html')
 
 
-@app.route('/cripta', methods=['GET'])
+@app.route('/download')
+@login_required
+def download_file() -> Response:
+    """
+        Переходим по роуту с качаем файл
+
+        Авторизованный пользователь переходит по роуту
+        и скачивает pdf файл с графиком
+
+        Returns:
+            str: pdf файл с графиком
+        """
+    return send_file('Figures.pdf', as_attachment=True)
+
+
+@app.route('/cripta', methods=['GET', 'POST'])
 @login_required
 # Функция для перехода на страницу крипта
 def cripta() -> str:
@@ -185,14 +201,18 @@ def cripta() -> str:
         Страница с информацией о Крипте
 
         Авторизованный пользователь переходит на страницу крипта
-        cripta.html.
+        cripta.html и получает информацию
 
         Returns:
             str: шаблон страницы cripta.html
     """
+    if request.method == 'POST':
+        crypto = request.form.get('content')
+        crypto_data = get_crypto_data(crypto)
+        gruph_crypto_price(crypto_data, crypto)
 
     prices = get_crypto_prices()
-    plot = generate_plot(prices)
+    # plot = generate_plot(prices)
     news = get_crypto_news()
 
     pars_block_chain24 = ParsBlock_Chain24()
@@ -215,7 +235,7 @@ def cripta() -> str:
     save_news_bd_binance = Save_Parser_BD(new_title_binance)
     save_news_bd_binance.save_pars()
 
-    return render_template('cripta.html', prices=prices, plot=plot, news=news)
+    return render_template('cripta.html', prices=prices, news=news)
 
 
 @app.route('/logout')
