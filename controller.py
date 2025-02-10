@@ -14,7 +14,7 @@ from mail import send_email
 from models import User, EmailConfirm
 
 from parser import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
-    ParsBinance
+    ParsBinance, ParsForklog
 from price_cripta import get_crypto_prices, get_crypto_news
 from save_parser import Save_Parser_BD
 
@@ -234,6 +234,11 @@ def cripta() -> str:
     new_title_binance = pars_binance.pars()
     save_news_bd_binance = Save_Parser_BD(new_title_binance)
     save_news_bd_binance.save_pars()
+
+    pars_forklog = ParsForklog()
+    new_title_forklog = pars_forklog.pars()
+    save_news_bd_forklog = Save_Parser_BD(new_title_forklog)
+    save_news_bd_forklog.save_pars()
 
     return render_template('cripta.html', prices=prices, news=news)
 
