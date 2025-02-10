@@ -45,7 +45,9 @@ class ParsBlock_Chain24(ParsNews):
 # Парсер www.ria.ru
 class ParsRia_ru(ParsNews):
     def __init__(self):
-        self.url_ria_ru = "https://ria.ru/economy/"
+        # self.url_ria_ru = "https://ria.ru/economy/"
+        self.url_ria_ru = 'https://ria.ru/economy+world/?ysclid=m6qcyuk5g7415845054'
+
 
     def pars(self):
         html = requests.get(self.url_ria_ru).text
@@ -114,7 +116,22 @@ class ParsBinance(ParsNews):
         return ls_news
 
 
+class ParsForklog(ParsNews):
+    def __init__(self):
+        self.url = "https://forklog.com/news"
 
+    def pars(self):
+        html = requests.get(self.url).text
+        soup = BeautifulSoup(html, 'lxml')
+        page = soup.find_all('div', class_='text_blk')
+
+        lst_news = []
+        for i in page:
+            title = i.find('p').text.strip()
+
+            lst_news.append(title)
+
+        return lst_news
 
 
 
