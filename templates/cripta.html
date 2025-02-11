@@ -13,9 +13,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>
+<!--    <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>-->
 <!--    <h2>Стоимость</h2>-->
     <ul>
+        <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>
         <h2>Стоимость</h2>
         {% for symbol, price in prices.items() %}
             <p>{{ symbol }}: ${{ price }}</p>
@@ -25,20 +26,24 @@
         <form method="post">
 <!--            <h2>График</h2>-->
             <div class="input-box">
-                <h2>График</h2>
-                <input type="text" placeholder="Введи, например BTC-USD" autocomplete="off" name="content" required>
-                <button type="submit" class="btn">Получить график</button>
+                <ul>
+                    <h2>График</h2>
+                    <input type="text" placeholder="Введи, например BTC-USD" autocomplete="off" name="content" required>
+                    <button type="submit" class="btn">Получить график</button>
+                </ul>
             </div>
         </form>
     </div>
 <!--    <h2>Новости</h2>-->
-    <ul>
-        <h2>Новости</h2>
-        {% for article in news %}
-            <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-<!--            <ol><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</ol>-->
-        {% endfor %}
-    </ul>
+    <div class="articles-container">
+        <ul>
+            <h2>Новости</h2>
+            {% for article in news %}
+                <ol><a href="{{ article.link }}" style="text-decoration: none;">{{ article.title }}</a></ol>
+    <!--            <ol><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</ol>-->
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 </body>
 </html>
