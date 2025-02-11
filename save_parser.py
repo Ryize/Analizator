@@ -9,7 +9,6 @@ class Save_Parser_BD:
     def __init__(self, articles: list):
         self.articles = articles
 
-
     def save_pars(self):
         for article in self.articles:
             # Проверяем, не добавлена ли эта статья ранее в БД

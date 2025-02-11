@@ -5,13 +5,15 @@ body {
 
 
 .container {
+    text-decoration: none;
+    color: gray;
     text-align: center;
     justify-content: center;
     max-width: 1000px;
     margin: auto;
     padding: 20px;
     border-radius: 20px;
-    background-color: white;
+    background: linear-gradient(to bottom, #fdfdfd 0%,#f2f2f4 0%);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
@@ -36,3 +38,7 @@ input[type="text"] {
 .btn:hover {
     background-color: #0069d9;
     }
+
+.articles-container.p {
+    text-decoration: none;
+}
