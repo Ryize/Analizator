@@ -1,9 +1,8 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
-import pandas as pd
 
 from matplotlib.backends.backend_pdf import PdfPages
-import os
+
 
 
 # Функция для получения данных о криптовалюте за последнюю неделю
@@ -28,36 +27,3 @@ def gruph_crypto_price(crypto_data, crypto_symbol):
 
     pdf.savefig()
     pdf.close()
-
-
-
-
-
-
-
-    # plt.savefig("output.jpg")
-    #
-    # # Saving figure by changing parameter values
-    # plt.savefig("output2", facecolor='y', bbox_inches="tight",
-    #             pad_inches=0.3, transparent=True)
-    # plt.close()
-    # pdf.close()
-    # plt.show()
-
-
-
-
-# # Основная функция
-# def main():
-#     # Ввод символа криптовалюты (например, BTC-USD для Bitcoin)
-#     crypto_symbol = input("Введите символ криптовалюты (например, BTC-USD): ")
-#
-#     # Получаем данные о криптовалюте
-#     crypto_data = get_crypto_data(crypto_symbol)
-#
-#     # Строим график
-#     gruph_crypto_price(crypto_data, crypto_symbol)
-#
-#
-# if __name__ == "__main__":
-#     main()
