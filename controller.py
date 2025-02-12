@@ -219,6 +219,7 @@ def cripta() -> str:
     save_news_bd_block_chain24 = Save_Parser_BD(new_title_block_chain24)
     save_news_bd_block_chain24.save_pars()
 
+
     pars_ria_ru = ParsRia_ru()
     new_title_ria_ru = pars_ria_ru.pars()
     save_news_bd_ria_ru = Save_Parser_BD(new_title_ria_ru)
