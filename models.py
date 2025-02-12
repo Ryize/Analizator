@@ -25,7 +25,7 @@ class EmailConfirm(db.Model):
     code = db.Column(db.String(33), unique=True, nullable=False)
 
 
-# Создание медели для хранения статьи
+# Создание модели для хранения статьи
 class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=False)

@@ -1,49 +1,33 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
     <title>Анализ криптобиржи</title>
-    <link rel="stylesheet" href="{{ url_for('static',
-    filename='css/stile_cripta.css') }}"/>
-<!--    <style>-->
-<!--        body { font-family: Arial, sans-serif; margin: 40px; }-->
-<!--        .container { max-width: 900px; margin: auto; }-->
-<!--        img { width: 100%; }-->
-<!--    </style>-->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 900px; margin: auto; }
+        img { width: 100%; }
+    </style>
 </head>
 <body>
-<div class="container">
-<!--    <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>-->
-<!--    <h2>Стоимость</h2>-->
-    <ul>
-        <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>
-        <h2>Стоимость</h2>
-        {% for symbol, price in prices.items() %}
-            <p>{{ symbol }}: ${{ price }}</p>
-        {% endfor %}
-    </ul>
-    <div class="wrapper">
-        <form method="post">
-<!--            <h2>График</h2>-->
-            <div class="input-box">
-                <ul>
-                    <h2>График</h2>
-                    <input type="text" placeholder="Введи, например BTC-USD" autocomplete="off" name="content" required>
-                    <button type="submit" class="btn">Получить график</button>
-                </ul>
-            </div>
-        </form>
-    </div>
-<!--    <h2>Новости</h2>-->
-    <div class="articles-container">
+    <div class="container">
+        <h1>Анализ криптобиржи</h1>
+
+        <h2>Текущие цены</h2>
         <ul>
-            <h2>Новости</h2>
+            {% for symbol, price in prices.items() %}
+                <li>{{ symbol }}: ${{ price }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>График</h2>
+        <img src="data:image/png;base64,{{ plot }}" alt="График цен">
+
+        <h2>Новости криптобиржи</h2>
+        <ul>
             {% for article in news %}
-                <ol><a href="{{ article.link }}" style="text-decoration: none;">{{ article.title }}</a></ol>
-    <!--            <ol><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</ol>-->
+                <li><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</li>
             {% endfor %}
         </ul>
     </div>
-</div>
 </body>
 </html>

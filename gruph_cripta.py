@@ -15,6 +15,7 @@ def get_crypto_data(crypto_symbol):
 
 pdf = PdfPages("Figures.pdf")
 
+
 # Функция для построения графика
 def gruph_crypto_price(crypto_data, crypto_symbol):
     # Создаем новый график и сохраняем его в PDF
