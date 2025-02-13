@@ -91,7 +91,7 @@ def register() -> str:
             # из 32 символов (латинских букв и цифр)
             code = ''.join(
                 [random.choice(string.ascii_letters + string.digits)
-                 for i in range(32)])
+                 for _ in range(32)])
             # Создаем новую запись в таблице EmailConfirm
             # с указанным кодом и логином
             user_confirm = EmailConfirm(login=username, code=code)
@@ -212,7 +212,6 @@ def cripta() -> str:
         gruph_crypto_price(crypto_data, crypto)
 
     prices = get_crypto_prices()
-    # plot = generate_plot(prices)
     news = get_crypto_news()
 
     pars_block_chain24 = ParsBlock_Chain24()
@@ -251,7 +250,7 @@ def logout() -> Response or str:
        Разлогиниться
 
        Выход из учётной записи и перенаправление на страницу регистрации;
-р
+
        Returns:
            str: шаблон страницы index.html
            Response: вызывает функцию register

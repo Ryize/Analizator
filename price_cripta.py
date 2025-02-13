@@ -1,8 +1,6 @@
 """Текущие курсы криптовалют, график и новости"""
 
 import requests
-import matplotlib.pyplot as plt
-import io, base64
 from bs4 import BeautifulSoup
 from textblob import TextBlob
 
@@ -21,9 +19,9 @@ def get_crypto_news():
         title = article.find('div', class_='card__title').text.strip()
         link = "https://www.block-chain24.com" + article.find("a")["href"]
         if title and link:
-            sentiment = analyze_sentiment(title)
+            # sentiment = analyze_sentiment(title)
             news.append(
-                {"title": title, "link": link, "sentiment": sentiment})
+                {"title": title, "link": link})  #, "sentiment": sentiment})
     return news
 
 
@@ -41,19 +39,3 @@ def get_crypto_prices():
     data = response.json()
     return {item['symbol']: float(item['price']) for item in data if
             'USDT' in item['symbol']}
-
-
-# Построение графика
-def generate_plot(prices):
-    fig, ax = plt.subplots()
-    ax.plot(list(prices.keys()), list(prices.values()), marker='o')
-    # plt.xticks(rotation=90)
-    plt.title("Стоимость в USDT")
-    # plt.xlabel("криптовалюта")
-    # plt.ylabel("стоимость в доллар сша")
-
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    encoded_img = base64.b64encode(buf.read()).decode('utf-8')
-    return encoded_img

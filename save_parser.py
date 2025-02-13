@@ -2,7 +2,6 @@
 
 from app import db
 from models import Article
-from parser import ParsNews
 
 
 class Save_Parser_BD:
@@ -10,6 +9,11 @@ class Save_Parser_BD:
         self.articles = articles
 
     def save_pars(self):
+        """Очищаем БД"""
+        Article.query.delete()  # Очищаем таблицу Article
+        db.session.commit()  # Сохраняем изменения в БД
+
+        """Сохраняет статьи в БД"""
         for article in self.articles:
             # Проверяем, не добавлена ли эта статья ранее в БД
             if Article.query.filter_by(title=article).first():
