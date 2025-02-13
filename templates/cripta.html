@@ -16,8 +16,8 @@
 <!--    <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>-->
 <!--    <h2>Стоимость</h2>-->
     <ul>
-        <h1>АНАЛИЗ КРИПТОБИРЖИ</h1>
-        <h2>Стоимость</h2>
+        <h1 id="title-text">АНАЛИЗ КРИПТОБИРЖИ</h1>
+        <h2 class="title-text2">Стоимость</h2>
         {% for symbol, price in prices.items() %}
             <p>{{ symbol }}: ${{ price }}</p>
         {% endfor %}
@@ -27,7 +27,7 @@
 <!--            <h2>График</h2>-->
             <div class="input-box">
                 <ul>
-                    <h2>График</h2>
+                    <h2 class="title-text2">График</h2>
                     <input type="text" placeholder="Введи, например BTC-USD" autocomplete="off" name="content" required>
                     <button type="submit" class="btn">Получить график</button>
                 </ul>
@@ -36,9 +36,9 @@
     </div>
     <div class="articles-container">
         <ul>
-            <h2>Новости</h2>
+            <h2 class="title-text2">Новости</h2>
             {% for article in news %}
-                <ol><a href="{{ article.link }}" style="text-decoration: none;">{{ article.title }}</a></ol>
+                <ol><a href="{{ article.link }}" style="text-decoration: none; color: white;">{{ article.title }}</a></ol>
     <!--            <ol><a href="{{ article.link }}">{{ article.title }}</a> (Sentiment: {{ article.sentiment }})</ol>-->
             {% endfor %}
         </ul>
