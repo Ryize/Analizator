@@ -1,19 +1,19 @@
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #85c2ff 0%,#4d9eef 0%,#4d9eef 4%);
+    background: linear-gradient(to bottom, #172c53 0%,#172c53 100%);
     }
 
 
 .container {
     text-decoration: none;
-    color: gray;
+    color: white;
     text-align: center;
     justify-content: center;
     max-width: 1000px;
     margin: auto;
     padding: 20px;
     border-radius: 20px;
-    background: linear-gradient(to bottom, #fdfdfd 0%,#f2f2f4 0%);
+    background: linear-gradient(to bottom, #6a6a6a 0%,#2b2b2b 0%,#757575 0%,#666666 0%,#808080 0%,#505050 0%,#393939 0%,#434343 100%,#4f4f4f 100%,#3b3b3b 100%,#4f4f4f 100%);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
@@ -39,6 +39,11 @@ input[type="text"] {
     background-color: #0069d9;
     }
 
-.articles-container.p {
-    text-decoration: none;
-}
+#title-text {
+    color: #2a9a9f;
+    font-size: 3vw;
+    }
+
+.title-text2 {
+    color: yellow;
+    }
