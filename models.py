@@ -8,6 +8,13 @@ from app import db, app, manager
 
 # Создание и описание модели для пользователей
 class User(db.Model, UserMixin):
+    """
+    Класс объекта БД
+
+    Класс для сохранения в БД данных нового зарегистрированного пользователя:
+    id клиента, email, имя, пароль для авторизации, подтверждение проверки
+    email, дата и время внесения данных в БД;
+    """
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(48), unique=True)
     login = db.Column(db.String(32), unique=True)
@@ -20,6 +27,12 @@ class User(db.Model, UserMixin):
 
 # Создание и описание модели для подтверждения email
 class EmailConfirm(db.Model):
+    """
+    Класс объекта БД
+
+    Класс для сохранения в БД сгенерированного кода для проверки email нового
+    зарегистрированного пользователя;
+    """
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(80), unique=True, nullable=False)
     code = db.Column(db.String(33), unique=True, nullable=False)
@@ -27,6 +40,11 @@ class EmailConfirm(db.Model):
 
 # Создание модели для хранения статьи
 class Article(db.Model):
+    """
+    Класс объекта БД
+
+    Класс для сохранения в БД заголовков новостей;
+    """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -34,6 +52,11 @@ class Article(db.Model):
 
 # Создание модели для хранения информации по курсу золота
 class GoldBD(db.Model):
+    """
+    Класс объекта БД
+
+    Класс для сохранения в БД курсов золота;
+    """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

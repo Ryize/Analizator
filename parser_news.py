@@ -10,6 +10,10 @@ from selenium import webdriver
 
 # Абстрактный класс
 class Parser(ABC):
+    """
+    Абстрактный класс всех парсеров
+
+    """
 
     # Абстрактный метод
     @abstractmethod
@@ -19,6 +23,11 @@ class Parser(ABC):
 
 # Парсер www.block-chain24.com
 class ParsBlock_Chain24(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга заголовков новостей;
+    """
     def __init__(self):
         self.url_block_chain24 = "https://www.block-chain24.com/news?ysclid=m6ony52ur9108910355"
 
@@ -44,6 +53,11 @@ class ParsBlock_Chain24(Parser):
 
 # Парсер www.ria.ru
 class ParsRia_ru(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга заголовков новостей;
+    """
     def __init__(self):
         # self.url_ria_ru = "https://ria.ru/economy/"
         self.url_ria_ru = 'https://ria.ru/economy+world/?ysclid=m6qcyuk5g7415845054'
@@ -69,6 +83,11 @@ class ParsRia_ru(Parser):
 
 # Парсер www.kommersant.ru
 class ParsKommersant_ru(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга заголовков новостей;
+    """
     def __init__(self):
         self.url_kommersant_ru = "https://www.kommersant.ru/theme/1984"
 
@@ -93,6 +112,11 @@ class ParsKommersant_ru(Parser):
 
 # Парсер binance.com
 class ParsBinance(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга заголовков новостей;
+    """
     def __init__(self):
         self.url_binance = "https://www.binance.com/ru/square/news/all"
 
@@ -116,6 +140,11 @@ class ParsBinance(Parser):
 
 
 class ParsForklog(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга заголовков новостей;
+    """
     def __init__(self):
         self.url = "https://forklog.com/news"
 

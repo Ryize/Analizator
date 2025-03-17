@@ -5,6 +5,11 @@ from models import Article, GoldBD
 
 
 class SaveParserBD:
+    """
+    Класс SaveParserBD
+
+    Класс для сохранения в БД Article;
+    """
     def __init__(self, articles: list):
         self.articles = articles
 
@@ -30,6 +35,11 @@ class SaveParserBD:
 
 
 class SaveGoldBD:
+    """
+    Класс SaveParserBD
+
+    Класс для сохранения в БД GoldBD;
+    """
     def __init__(self, info_list: list):
         self.info_list = info_list
 

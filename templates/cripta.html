@@ -10,16 +10,22 @@
 <body>
 <div class="container">
     <h1 id="title-text">АНАЛИЗ КРИПТОБИРЖИ</h1>
-        <div class="articles-container">
+    <div class="articles-container">
         <ul>
             <h2 class="title-text2">Новости</h2>
             {% for article in news %}
                 <ol>
-                    <a href="{{ article.link }}" style="text-decoration: none; color: white;">{{ article.title }}<br></a><br>
+                    <a style="text-decoration: none; color: white;">{{ article }}<br></a><br>
                 </ol>
             {% endfor %}
         </ul>
     </div>
+
+    <div class="answer">
+        <h2 class="title-text2">Ответ чата GPT</h2>
+        <a style="text-decoration: none; color: white;">{{ gpt_answer }}</a>
+    </div>
+
 
     <ul>
         <h2 class="title-text2">Стоимость криптовалют</h2>

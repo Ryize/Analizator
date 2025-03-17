@@ -7,8 +7,9 @@ from flask import render_template, request, redirect, url_for, send_file
 from flask.wrappers import Response
 from flask_login import logout_user, login_required, login_user
 
+from api_proxy import RequestProxyAPI
 from app import app, db
-from business_logic.check_fata import check_auth_data
+from business_logic.check_auth_data import check_auth_data
 from gruph_cripta import get_crypto_data, gruph_crypto_price
 from mail import send_email
 from models import User, EmailConfirm, Article, GoldBD
@@ -44,27 +45,29 @@ def email_confirm(code: int) -> Response or str:
     user_confirm = EmailConfirm.query.filter_by(code=code).first()
     # Если подтверждение существует, то удаляем его из БД
     # и меняем статус email_confirm у пользователя в БД
-    if user_confirm:
-        # Ищем пользователя в БД по логину,
-        # соответствующему логину в подтверждении
-        user = User.query.filter_by(login=user_confirm.login).first()
-        # Если пользователь найден, то меняем его статус email_confirm
-        # на True
-        user.email_confirm = True
-        # Добавляем пользователя в БД
-        db.session.add(user)
-        # Удаляем пользователя из БД
-        db.session.delete(user_confirm)
-        # Сохраняем изменения в БД
-        db.session.commit()
-    # Отправляем подтверждение на указанный email
-    return redirect(url_for('register'))
+    if not user_confirm:
+        return redirect(url_for('register'))
+    # Ищем пользователя в БД по логину,
+    # соответствующему логину в подтверждении
+    user = User.query.filter_by(login=user_confirm.login).first()
+    # Если пользователь найден, то меняем его статус email_confirm
+    # на True
+    user.email_confirm = True
+    # Добавляем пользователя в БД
+    db.session.add(user)
+    # Удаляем пользователя из БД
+    db.session.delete(user_confirm)
+    # Сохраняем изменения в БД
+    db.session.commit()
+    # авторизуем пользователя
+    login_user(user)
+    return redirect(url_for('index'))
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/register', methods=['GET', 'POST'])
 # Функция регистрации нового пользователя
-def register() -> str:
+def register() -> Response or str:
     """
        Страница регистрации
 
@@ -77,46 +80,48 @@ def register() -> str:
     """
 
     # Если это POST-запрос, значит была нажата кнопка "Регистрация"
-    if request.method == 'POST':
-        # Получаем данные из формы регистрации
-        email = request.form.get('email')
-        username = request.form.get('login')
-        password = request.form.get('password')
-        print(email, username, password)
+    if request.method == 'GET':
+        return render_template('register.html')
+    # Получаем данные из формы регистрации
+    email = request.form.get('email')
+    username = request.form.get('login')
+    password = request.form.get('password')
+    print(email, username, password)
 
-        # Проверяем корректность введенных данных
-        if check_auth_data(username, password):
-            # Создаем нового пользователя
-            user = User(email=email, login=username, password=password)
-            # Создаем код подтверждения email, состоящий
-            # из 32 символов (латинских букв и цифр)
-            code = ''.join(
-                [random.choice(string.ascii_letters + string.digits)
-                 for _ in range(32)])
-            # Создаем новую запись в таблице EmailConfirm
-            # с указанным кодом и логином
-            user_confirm = EmailConfirm(login=username, code=code)
-            # print(f'Успешная регистрация! {user.email}, {user.password}')
+    # Проверяем корректность введенных данных (функция из файла check_auth_data.py папка business_logic)
+    if not check_auth_data(username, password):
+        print('Неверные данные при регистрации!')
+        return redirect(url_for('register'))
 
-            # Формируем сессии для последующего добавления в БД
-            db.session.add(user)
-            # Сохранение в базу данных всех сформированных сессий одним
-            # комитом
-            db.session.add(user_confirm)
-            # Сохранение в базу данных всех сформированных сессий одним
-            # комитом
-            db.session.commit()
+    # Создаем нового пользователя
+    user = User(email=email, login=username, password=password)
+    # Создаем код подтверждения email, состоящий
+    # из 32 символов (латинских букв и цифр)
+    code = ''.join(
+        [random.choice(string.ascii_letters + string.digits)
+         for _ in range(32)])
+    # Создаем новую запись в таблице EmailConfirm
+    # с указанным кодом и логином
+    user_confirm = EmailConfirm(login=username, code=code)
+    # print(f'Успешная регистрация! {user.email}, {user.password}')
 
-            # Отправляем письмо с сылкой для подтверждения почты
-            message = (f'Ссылка для подтверждения '
-                       f'почты: http://127.0.0.1:5000/email-confirm/'
-                       f'{code}')
-            # Отправляем письмо c сылкой на сервер
-            send_email(message, email, 'Подтверждение почты')
-            print(f'Успешная регистрация! {user.email}, {user.password}')
-        else:
-            print('Неверные данные при регистрации!')
-    return render_template('register.html')
+    # Формируем сессии для последующего добавления в БД
+    db.session.add(user)
+    # Сохранение в базу данных всех сформированных сессий одним
+    # комитом
+    db.session.add(user_confirm)
+    # Сохранение в базу данных всех сформированных сессий одним
+    # комитом
+    db.session.commit()
+
+    # Отправляем письмо с сылкой для подтверждения почты
+    message = (f'Ссылка для подтверждения '
+               f'почты: http://127.0.0.1:5000/email-confirm/'
+               f'{code}')
+    # Отправляем письмо c сылкой на сервер
+    send_email(message, email, 'Подтверждение почты')
+    print(f'Успешная регистрация! {user.email}, {user.password}')
+    return render_template('login.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -137,27 +142,27 @@ def login() -> Response or str:
     #     return render_template('login.html')
 
     # Проверка наличия введённых данных авторизации
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    if request.method == 'GET':
+        return render_template('login.html')
 
-        # Чтение данных
-        user = User.query.filter_by(email=email, password=password).first()
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-        # Проверка наличия пользователя в БД и наличие соответствующих
-        # паролей
-        if user and user.email_confirm:
-            print(f'Успешная авторизация! {user.email}, {user.password}')
-            # Выполняем логин пользователя
-            login_user(user)
-            # В случае успешной авторизации перенаправляем на главную
-            # страницу
-            return redirect(url_for('index'))
-        # Если данные неверны, выводим сообщение "Ошибка авторизации"
-        print('Ошибка авторизации!')
-        # Если данные неверны, перенаправляем на страницу регистрации
-        return render_template('register.html',)
-        # return redirect(url_for('register'))
+    # Чтение данных
+    user = User.query.filter_by(email=email, password=password).first()
+
+    # Проверка наличия пользователя в БД и наличие соответствующих
+    # паролей
+    if user and user.email_confirm:
+        print(f'Успешная авторизация! {user.email}, {user.password}')
+        # Выполняем логинизацию (авторизацию) пользователя
+        login_user(user)
+        # В случае успешной авторизации перенаправляем на главную
+        # страницу
+        return redirect(url_for('index'))
+    # Если данные неверны, выводим сообщение "Ошибка авторизации"
+    print('Ошибка авторизации!')
+    # Если данные неверны, перенаправляем на страницу регистрации
     return render_template('login.html')
 
 
@@ -207,19 +212,7 @@ def cripta() -> str:
         Returns:
             str: шаблон страницы cripta.html
     """
-
-    # собираем данные с формы на странице
-    if request.method == 'POST':
-        crypto = request.form.get('content')
-        crypto_data = get_crypto_data(crypto)
-        gruph_crypto_price(crypto_data, crypto)
-
-    # получаем список цен на криптовалюту (файл price_cripta.py)
-    prices = get_crypto_prices()
-    # получение новостей с сайта www.block-chain24 (файл price_cripta.py)
-    news = get_crypto_news()
-
-    # Очищаем таблицу Article
+    # Очищаем таблицу БД - Article
     Article.query.delete()
     # Сохраняем изменения в БД
     db.session.commit()
@@ -233,32 +226,56 @@ def cripta() -> str:
     # сохраняем данные в БД через метод .save_pars() созданного объекта класса;
     save_news_bd_block_chain24.save_pars()
 
+    # парсим риановости
     pars_ria_ru = ParsRia_ru()
     new_title_ria_ru = pars_ria_ru.pars()
     save_news_bd_ria_ru = SaveParserBD(new_title_ria_ru)
     save_news_bd_ria_ru.save_pars()
 
+    # парсим коммерсант.ру
     pars_kommersant_ru = ParsKommersant_ru()
     new_title_kommersant_ru = pars_kommersant_ru.pars()
     save_news_bd_kommersant_ru = SaveParserBD(new_title_kommersant_ru)
     save_news_bd_kommersant_ru.save_pars()
 
+    # парсим
     pars_binance = ParsBinance()
     new_title_binance = pars_binance.pars()
     save_news_bd_binance = SaveParserBD(new_title_binance)
     save_news_bd_binance.save_pars()
 
+    # парсим
     pars_forklog = ParsForklog()
     new_title_forklog = pars_forklog.pars()
     save_news_bd_forklog = SaveParserBD(new_title_forklog)
     save_news_bd_forklog.save_pars()
 
-    all_articles = ''
-    for i in news:
-        all_articles = all_articles + i['title'] + ';\n'
-    print(all_articles)
+    # собираем данные с формы на странице (выбор криптовалюты)
+    if request.method == 'POST':
+        crypto = request.form.get('content')
+        crypto_data = get_crypto_data(crypto)
+        gruph_crypto_price(crypto_data, crypto)
 
-    return render_template('cripta.html', prices=prices, news=news)
+    # получаем список цен на криптовалюту (файл price_cripta.py)
+    prices = get_crypto_prices()
+    # получение новостей с сайта www.block-chain24 (файл price_cripta.py)
+    news = get_crypto_news()
+    print(type(news))
+
+    # с помощью класса RequestProxyAPI из файла api_proxy, и его метода
+    # request_to_proxy_api, передаем для обработки в чат GPT заголовки
+    # новостей (news), формируем ответ в переменной gpt_answer
+    gpt_answer = RequestProxyAPI().request_to_proxy_api(news)
+
+    # вывод на экран новостей с сайта www.block-chain24, для проверки
+    for article in news:
+        print(article, ';')
+
+    # возвращаем страницу cripta.html с переменными с данными
+    return render_template('cripta.html',
+                           prices=prices,
+                           news=news,
+                           gpt_answer=gpt_answer)
 
 
 @app.route('/gold', methods=['GET', 'POST'])

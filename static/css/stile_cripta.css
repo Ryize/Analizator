@@ -49,3 +49,9 @@ input[type="text"] {
     text-align: center;
     color: yellow;
     }
+
+.answer {
+    padding-left: 50px;
+    padding-right: 50px;
+
+    }

@@ -1,4 +1,5 @@
-# Получение данных о стоимости золота (с сайта investzoloto.ru)
+""" Получение данных (парсинг) о стоимости золота с сайта investzoloto.ru"""
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -6,6 +7,11 @@ from parser_news import Parser
 
 
 class ParsGold(Parser):
+    """
+    Класс объекта Parser
+
+    Класс для парсинга курса золота;
+    """
     def __init__(self):
         self.url = "https://investzoloto.ru/kurs_zoloto/"
 

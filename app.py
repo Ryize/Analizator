@@ -1,3 +1,5 @@
+"""Файл для настройки приложений данного проекта"""
+
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension # pip install flask-debugtoolbar
 from flask_sqlalchemy import SQLAlchemy
