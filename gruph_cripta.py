@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 
-
 # Функция для получения данных о криптовалюте за последнюю неделю
 def get_crypto_data(crypto_symbol):
     # Получаем данные за последнюю неделю
@@ -28,3 +27,4 @@ def gruph_crypto_price(crypto_data, crypto_symbol):
 
     pdf.savefig()
     pdf.close()
+

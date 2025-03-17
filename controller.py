@@ -11,12 +11,13 @@ from app import app, db
 from business_logic.check_fata import check_auth_data
 from gruph_cripta import get_crypto_data, gruph_crypto_price
 from mail import send_email
-from models import User, EmailConfirm
+from models import User, EmailConfirm, Article, GoldBD
+from parser_gold import ParsGold
 
-from parser import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
+from parser_news import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
     ParsBinance, ParsForklog
 from price_cripta import get_crypto_prices, get_crypto_news
-from save_parser import Save_Parser_BD
+from save_parser import SaveParserBD, SaveGoldBD
 
 
 @app.route('/email-confirm/<code>')
@@ -182,7 +183,7 @@ def index() -> str:
 @login_required
 def download_file() -> Response:
     """
-        Переходим по роуту с качаем файл
+        Переходим по роуту скачаем файл
 
         Авторизованный пользователь переходит по роуту
         и скачивает pdf файл с графиком
@@ -206,40 +207,89 @@ def cripta() -> str:
         Returns:
             str: шаблон страницы cripta.html
     """
+
+    # собираем данные с формы на странице
     if request.method == 'POST':
         crypto = request.form.get('content')
         crypto_data = get_crypto_data(crypto)
         gruph_crypto_price(crypto_data, crypto)
 
+    # получаем список цен на криптовалюту (файл price_cripta.py)
     prices = get_crypto_prices()
+    # получение новостей с сайта www.block-chain24 (файл price_cripta.py)
     news = get_crypto_news()
 
+    # Очищаем таблицу Article
+    Article.query.delete()
+    # Сохраняем изменения в БД
+    db.session.commit()
+
+    # создаем объект класса ParsBlock_Chain24
     pars_block_chain24 = ParsBlock_Chain24()
+    # сохраняем в переменную результат метода .pars() созданного объекта класса
     new_title_block_chain24 = pars_block_chain24.pars()
-    save_news_bd_block_chain24 = Save_Parser_BD(new_title_block_chain24)
+    # создаем объект класса Save_Parser_BD
+    save_news_bd_block_chain24 = SaveParserBD(new_title_block_chain24)
+    # сохраняем данные в БД через метод .save_pars() созданного объекта класса;
     save_news_bd_block_chain24.save_pars()
 
     pars_ria_ru = ParsRia_ru()
     new_title_ria_ru = pars_ria_ru.pars()
-    save_news_bd_ria_ru = Save_Parser_BD(new_title_ria_ru)
+    save_news_bd_ria_ru = SaveParserBD(new_title_ria_ru)
     save_news_bd_ria_ru.save_pars()
 
     pars_kommersant_ru = ParsKommersant_ru()
     new_title_kommersant_ru = pars_kommersant_ru.pars()
-    save_news_bd_kommersant_ru = Save_Parser_BD(new_title_kommersant_ru)
+    save_news_bd_kommersant_ru = SaveParserBD(new_title_kommersant_ru)
     save_news_bd_kommersant_ru.save_pars()
 
     pars_binance = ParsBinance()
     new_title_binance = pars_binance.pars()
-    save_news_bd_binance = Save_Parser_BD(new_title_binance)
+    save_news_bd_binance = SaveParserBD(new_title_binance)
     save_news_bd_binance.save_pars()
 
     pars_forklog = ParsForklog()
     new_title_forklog = pars_forklog.pars()
-    save_news_bd_forklog = Save_Parser_BD(new_title_forklog)
+    save_news_bd_forklog = SaveParserBD(new_title_forklog)
     save_news_bd_forklog.save_pars()
 
+    all_articles = ''
+    for i in news:
+        all_articles = all_articles + i['title'] + ';\n'
+    print(all_articles)
+
     return render_template('cripta.html', prices=prices, news=news)
+
+
+@app.route('/gold', methods=['GET', 'POST'])
+@login_required
+# Функция для перехода на страницу /gold
+def gold() -> str:
+    """
+        Страница с информацией о Золоте
+
+        Авторизованный пользователь переходит на страницу крипта
+        gold.html и получает информацию
+
+        Returns:
+            str: шаблон страницы gold.html
+    """
+
+    GoldBD.query.delete()  # Очищаем таблицу БД GoldBD
+    db.session.commit()  # Сохраняем изменения в БД
+
+    # создаем объект класса ParsGold
+    pars_gold = ParsGold()
+    # сохраняем в переменную результат метода .pars() созданного объекта класса
+    new_data_pars_gold = pars_gold.pars()
+    # создаем объект класса SaveGoldBD
+    save_new_data_pars_gold = SaveGoldBD(new_data_pars_gold)
+    # сохраняем данные в БД через метод .save_pars() созданного объекта класса;
+    save_new_data_pars_gold.save_pars()
+
+    data_about_gold = GoldBD.query.all()
+
+    return render_template('gold.html', data=data_about_gold)
 
 
 @app.route('/logout')

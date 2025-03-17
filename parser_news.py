@@ -9,7 +9,7 @@ from selenium import webdriver
 
 
 # Абстрактный класс
-class ParsNews(ABC):
+class Parser(ABC):
 
     # Абстрактный метод
     @abstractmethod
@@ -18,7 +18,7 @@ class ParsNews(ABC):
 
 
 # Парсер www.block-chain24.com
-class ParsBlock_Chain24(ParsNews):
+class ParsBlock_Chain24(Parser):
     def __init__(self):
         self.url_block_chain24 = "https://www.block-chain24.com/news?ysclid=m6ony52ur9108910355"
 
@@ -43,11 +43,10 @@ class ParsBlock_Chain24(ParsNews):
 
 
 # Парсер www.ria.ru
-class ParsRia_ru(ParsNews):
+class ParsRia_ru(Parser):
     def __init__(self):
         # self.url_ria_ru = "https://ria.ru/economy/"
         self.url_ria_ru = 'https://ria.ru/economy+world/?ysclid=m6qcyuk5g7415845054'
-
 
     def pars(self):
         html = requests.get(self.url_ria_ru).text
@@ -69,7 +68,7 @@ class ParsRia_ru(ParsNews):
 
 
 # Парсер www.kommersant.ru
-class ParsKommersant_ru(ParsNews):
+class ParsKommersant_ru(Parser):
     def __init__(self):
         self.url_kommersant_ru = "https://www.kommersant.ru/theme/1984"
 
@@ -93,7 +92,7 @@ class ParsKommersant_ru(ParsNews):
 
 
 # Парсер binance.com
-class ParsBinance(ParsNews):
+class ParsBinance(Parser):
     def __init__(self):
         self.url_binance = "https://www.binance.com/ru/square/news/all"
 
@@ -116,7 +115,7 @@ class ParsBinance(ParsNews):
         return ls_news
 
 
-class ParsForklog(ParsNews):
+class ParsForklog(Parser):
     def __init__(self):
         self.url = "https://forklog.com/news"
 

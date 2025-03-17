@@ -9,8 +9,10 @@ from config import DATABASE_URL, SECRET_KEY
 # Создание экземпляра приложения Flask и настройка его основных параметров
 # и подключения к базе данных
 app = Flask(__name__)
+
 # Настройка базы данных SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
 # Задание секретного ключа для защиты сессий
 app.config['SECRET_KEY'] = SECRET_KEY
 
@@ -19,8 +21,10 @@ app.config['TOASTR_TIMEOUT'] = 3000
 app.config['DEBUG_TB_ENABLED'] = True
 app.config['SQLALCHEMY_RECORD_QUERIES'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
 # Инициализация базы данных
 db = SQLAlchemy(app)
+
 # Инициализация менеджера логина
 manager = LoginManager(app)
 toastr = Toastr(app)

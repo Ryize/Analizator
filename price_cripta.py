@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from textblob import TextBlob
 
 
-
 def get_crypto_news():
     url = "https://www.block-chain24.com/news?ysclid=m6ony52ur9108910355"  # Замените на реальный новостной сайт
     # Для использования API требуется зарегистрироваться и получить ключи

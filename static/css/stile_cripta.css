@@ -7,7 +7,7 @@ body {
 .container {
     text-decoration: none;
     color: white;
-    text-align: center;
+    text-align: left;
     justify-content: center;
     max-width: 1000px;
     margin: auto;
@@ -40,10 +40,12 @@ input[type="text"] {
     }
 
 #title-text {
+    text-align: center;
     color: #2a9a9f;
     font-size: 3vw;
     }
 
 .title-text2 {
+    text-align: center;
     color: yellow;
     }

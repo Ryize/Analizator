@@ -164,7 +164,10 @@ idea/
 *idea
 /idea
 config.py
-draft.py
-cognetive.py
-
 /config.py
+/.*
+.*
+.gitignore
+cognetive.py
+/Figures.pdf
+/readme_creat_anallizator.docx
