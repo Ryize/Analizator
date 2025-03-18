@@ -12,15 +12,16 @@ Analizator
 Клонируйте репозиторий и перейдите в установленную папку:
 
 git clone https://github.com/Ryize/Analizator.git
-cd AppointmentSiteFlask
-Установите requirements:
 
+cd Analizator
+
+Установите requirements:
 pip3 install -r requirements.txt
 
 Далее вам необходимо создать файл config.py и указать информацию в формате:
 
 # для БД (в данном случае sqlite), у вас может быть любая БД
-DATABASE_URI = 'sqlite:///наши данные'
+DATABASE_URI = 'sqlite:///ваши данные'
 # ваша почта с которой будет отправляться письмо для проверки email нового пользователя
 EMAIL_LOGIN = 'ваша почта'
 # Пароль для внешних приложений вашего почтового сервиса (например mail.ru)
