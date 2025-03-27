@@ -12,7 +12,6 @@ from selenium import webdriver
 class Parser(ABC):
     """
     Абстрактный класс всех парсеров
-
     """
 
     # Абстрактный метод
@@ -59,7 +58,6 @@ class ParsRia_ru(Parser):
     Класс для парсинга заголовков новостей;
     """
     def __init__(self):
-        # self.url_ria_ru = "https://ria.ru/economy/"
         self.url_ria_ru = 'https://ria.ru/economy+world/?ysclid=m6qcyuk5g7415845054'
 
     def pars(self):
@@ -73,7 +71,6 @@ class ParsRia_ru(Parser):
             if link is None:
                 continue
 
-            # links = 'https://ria.ru' + link['href']
             title = i.find('a', class_='list-item__title color-font-hover-only').text.strip()
 
             lst_news.append(title)
@@ -102,7 +99,6 @@ class ParsKommersant_ru(Parser):
             if link is None:
                 continue
 
-            # links = 'https://www.kommersant.ru/' + link['href']
             title = i.find('span', class_='vam').text.strip()
 
             lst_news.append(title)
@@ -160,3 +156,8 @@ class ParsForklog(Parser):
             lst_news.append(title)
 
         return lst_news
+
+
+# создаем полиморфный контейнер из всех объектов для парсинга
+all_source_news_lst = [ParsBlock_Chain24(), ParsRia_ru(), ParsKommersant_ru(),
+                       ParsBinance(), ParsForklog()]

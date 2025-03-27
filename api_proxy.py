@@ -1,3 +1,5 @@
+""" Файл для работы с proxy API """
+
 from openai import OpenAI
 from config import RAPID_API_KEY
 
@@ -19,12 +21,13 @@ class RequestProxyAPI:
             'криптовалюты и почему.\n')
 
     def request_to_proxy_api(self, data: list):
+        proxy_api_url = "https://api.proxyapi.ru/openai/v1"
         user_request = 'Вот эти новости:'
         for article in data:
-            user_request = user_request + article + '\n'
+            user_request = f'{user_request} {article} \n'
         client = OpenAI(
             api_key=RAPID_API_KEY,
-            base_url="https://api.proxyapi.ru/openai/v1",
+            base_url=proxy_api_url,
         )
 
         completion = client.chat.completions.create(
@@ -34,7 +37,6 @@ class RequestProxyAPI:
                 {"role": "user", "content": user_request}
             ]
         )
-        print(completion.choices[0].message.content)
         return completion.choices[0].message.content
 
 

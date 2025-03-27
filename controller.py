@@ -9,14 +9,12 @@ from flask_login import logout_user, login_required, login_user
 
 from api_proxy import RequestProxyAPI
 from app import app, db
-from business_logic.check_auth_data import check_auth_data
 from gruph_cripta import get_crypto_data, gruph_crypto_price
 from mail import send_email
 from models import User, EmailConfirm, Article, GoldBD
 from parser_gold import ParsGold
 
-from parser_news import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
-    ParsBinance, ParsForklog
+from parser_news import all_source_news_lst
 from price_cripta import get_crypto_prices, get_crypto_news
 from save_parser import SaveParserBD, SaveGoldBD
 
@@ -25,20 +23,20 @@ from save_parser import SaveParserBD, SaveGoldBD
 # Функция для подтверждения email
 def email_confirm(code: int) -> Response or str:
     """
-        Подтверждение email
+    Подтверждение email
 
-        Проверяем, существует ли подтверждение в БД
-        Если подтверждение существует, то удаляем его из БД
-        и меняем статус email_confirm у пользователя в БД
-        Если подтверждение не существует,
-        то перенаправляем на страницу регистрации;
+    Проверяем, существует ли подтверждение в БД
+    Если подтверждение существует, то удаляем его из БД
+    и меняем статус email_confirm у пользователя в БД
+    Если подтверждение не существует,
+    то перенаправляем на страницу регистрации;
 
-        Args:
-            code: int (код подтверждения)
+    Args:
+        code: int (код подтверждения)
 
-        Returns:
-            str: шаблон страницы 500.html
-            Response: перенаправление на страницу register
+    Returns:
+        str: шаблон страницы 500.html
+        Response: перенаправление на страницу register
     """
 
     # Проверяем, существует ли подтверждение с таким кодом в БД
@@ -68,15 +66,16 @@ def email_confirm(code: int) -> Response or str:
 @app.route('/register', methods=['GET', 'POST'])
 # Функция регистрации нового пользователя
 def register() -> Response or str:
+
     """
-       Страница регистрации
+    Страница регистрации
 
-       Пользователь переходит на страницу регистрации, вводит данные,
-       нажимает кнопку "Регистрация", и если данные корректны,
-       регистрируется новый пользователь в БД;
+    Пользователь переходит на страницу регистрации, вводит данные,
+    нажимает кнопку "Регистрация", и если данные корректны,
+    регистрируется новый пользователь в БД;
 
-       Returns:
-           str: шаблон страницы 500.html или register.html
+    Returns:
+    str: шаблон страницы 500.html или register.html
     """
 
     # Если это POST-запрос, значит была нажата кнопка "Регистрация"
@@ -88,9 +87,9 @@ def register() -> Response or str:
     password = request.form.get('password')
     print(email, username, password)
 
-    # Проверяем корректность введенных данных (функция из файла check_auth_data.py папка business_logic)
-    if not check_auth_data(username, password):
-        print('Неверные данные при регистрации!')
+    # Проверяем длину логина и пароля
+    if not (3 < len(username) < 20) or not (4 < len(password) < 32):
+        print('Неверный формат данных при регистрации!')
         return redirect(url_for('register'))
 
     # Создаем нового пользователя
@@ -128,19 +127,18 @@ def register() -> Response or str:
 # Функция авторизации пользователя
 def login() -> Response or str:
     """
-       Страница авторизации
+    Страница авторизации
+    Пользователь авторизуется, далее проверяет почту и пароль,
+    если есть перенаправляет на главную страницу, если нет направляет на
+    страницу регистрации;
 
-       Пользователь авторизуется, далее проверяет почту и пароль,
-       если есть перенаправляет на главную страницу, если нет направляет на
-       страницу регистрации;
+    Пользователь авторизуется, далее проверяет почту и пароль,
+    если есть перенаправляет на главную страницу, если нет направляет на
+    страницу регистрации;
 
-       Returns:
-           str: шаблон страницы index.html или register
+    Returns:
+        str: шаблон страницы index.html или register
     """
-
-    # if request.method == 'GET':
-    #     return render_template('login.html')
-
     # Проверка наличия введённых данных авторизации
     if request.method == 'GET':
         return render_template('login.html')
@@ -173,14 +171,14 @@ def login() -> Response or str:
 # Функция главной страницы
 def index() -> str:
     """
-       Главная страница
+    Главная страница
 
-       Авторизованный пользователь переходит на главную страницу
-       index.html.
+    Авторизованный пользователь переходит на главную страницу
+    index.html.
 
-       Returns:
-           str: шаблон страницы index.html
-       """
+    Returns:
+        str: шаблон страницы index.html
+    """
     return render_template('index.html')
 
 
@@ -188,14 +186,14 @@ def index() -> str:
 @login_required
 def download_file() -> Response:
     """
-        Переходим по роуту скачаем файл
+    Переходим по роуту скачаем файл
 
-        Авторизованный пользователь переходит по роуту
-        и скачивает pdf файл с графиком
+    Авторизованный пользователь переходит по роуту
+    и скачивает pdf файл с графиком
 
-        Returns:
-            str: pdf файл с графиком
-        """
+    Returns:
+        str: pdf файл с графиком
+    """
     return send_file('Figures.pdf', as_attachment=True)
 
 
@@ -204,51 +202,23 @@ def download_file() -> Response:
 # Функция для перехода на страницу крипта
 def cripta() -> str:
     """
-        Страница с информацией о Крипте
+    Страница с информацией о Крипте
 
-        Авторизованный пользователь переходит на страницу крипта
-        cripta.html и получает информацию
+    Авторизованный пользователь переходит на страницу крипта
+    cripta.html и получает информацию
 
-        Returns:
-            str: шаблон страницы cripta.html
+    Returns:
+        str: шаблон страницы cripta.html
     """
     # Очищаем таблицу БД - Article
     Article.query.delete()
     # Сохраняем изменения в БД
     db.session.commit()
 
-    # создаем объект класса ParsBlock_Chain24
-    pars_block_chain24 = ParsBlock_Chain24()
-    # сохраняем в переменную результат метода .pars() созданного объекта класса
-    new_title_block_chain24 = pars_block_chain24.pars()
-    # создаем объект класса Save_Parser_BD
-    save_news_bd_block_chain24 = SaveParserBD(new_title_block_chain24)
-    # сохраняем данные в БД через метод .save_pars() созданного объекта класса;
-    save_news_bd_block_chain24.save_pars()
-
-    # парсим риановости
-    pars_ria_ru = ParsRia_ru()
-    new_title_ria_ru = pars_ria_ru.pars()
-    save_news_bd_ria_ru = SaveParserBD(new_title_ria_ru)
-    save_news_bd_ria_ru.save_pars()
-
-    # парсим коммерсант.ру
-    pars_kommersant_ru = ParsKommersant_ru()
-    new_title_kommersant_ru = pars_kommersant_ru.pars()
-    save_news_bd_kommersant_ru = SaveParserBD(new_title_kommersant_ru)
-    save_news_bd_kommersant_ru.save_pars()
-
-    # парсим
-    pars_binance = ParsBinance()
-    new_title_binance = pars_binance.pars()
-    save_news_bd_binance = SaveParserBD(new_title_binance)
-    save_news_bd_binance.save_pars()
-
-    # парсим
-    pars_forklog = ParsForklog()
-    new_title_forklog = pars_forklog.pars()
-    save_news_bd_forklog = SaveParserBD(new_title_forklog)
-    save_news_bd_forklog.save_pars()
+    # парсим все новости из полиморфного контейнера (из файла parser_news.py)
+    for source_news in all_source_news_lst:
+        get_news = source_news.pars()
+        SaveParserBD(get_news).save_pars()
 
     # собираем данные с формы на странице (выбор криптовалюты)
     if request.method == 'POST':
@@ -260,7 +230,6 @@ def cripta() -> str:
     prices = get_crypto_prices()
     # получение новостей с сайта www.block-chain24 (файл price_cripta.py)
     news = get_crypto_news()
-    print(type(news))
 
     # с помощью класса RequestProxyAPI из файла api_proxy, и его метода
     # request_to_proxy_api, передаем для обработки в чат GPT заголовки
@@ -268,6 +237,7 @@ def cripta() -> str:
     gpt_answer = RequestProxyAPI().request_to_proxy_api(news)
 
     # вывод на экран новостей с сайта www.block-chain24, для проверки
+    # осознано оставил этот принт, прошу не обращать на него внимания при ревью
     for article in news:
         print(article, ';')
 
@@ -283,13 +253,13 @@ def cripta() -> str:
 # Функция для перехода на страницу /gold
 def gold() -> str:
     """
-        Страница с информацией о Золоте
+    Страница с информацией о Золоте
 
-        Авторизованный пользователь переходит на страницу крипта
-        gold.html и получает информацию
+    Авторизованный пользователь переходит на страницу крипта
+    gold.html и получает информацию
 
-        Returns:
-            str: шаблон страницы gold.html
+    Returns:
+        str: шаблон страницы gold.html
     """
 
     GoldBD.query.delete()  # Очищаем таблицу БД GoldBD
@@ -314,17 +284,18 @@ def gold() -> str:
 # Функция выхода из учётной записи и перенаправления на страницу регистрации
 def logout() -> Response or str:
     """
-       Разлогиниться
+    Разлогиниться
 
-       Выход из учётной записи и перенаправление на страницу регистрации;
+    Выход из учётной записи и перенаправление на страницу регистрации;
 
-       Returns:
-           str: шаблон страницы index.html
-           Response: вызывает функцию register
-   """
+    Returns:
+       str: шаблон страницы index.html
+       Response: вызывает функцию register
+    """
 
     # Выход из учётной записи и перенаправление на страницу регистрации
     logout_user()
+    # вывод на экран информационного сообщения
     print('Вы успешно разлогинились!')
     return redirect(url_for('login'))
 
@@ -334,11 +305,11 @@ def logout() -> Response or str:
 # Функция перенаправления на страницу регистрации при неправильной авторизации
 def redirect_to_sign(response: Response) -> Response or str:
     """
-        Обработка ошибки 401
+    Обработка ошибки 401
 
-        Returns:
-            Response: вызывает функцию register
-            str: шаблон страницы 500.html
+    Returns:
+        Response: вызывает функцию register
+        str: шаблон страницы 500.html
     """
 
     # Если клиент авторизован, перенаправлять его не нужно
