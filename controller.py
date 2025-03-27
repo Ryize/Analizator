@@ -14,8 +14,7 @@ from mail import send_email
 from models import User, EmailConfirm, Article, GoldBD
 from parser_gold import ParsGold
 
-from parser_news import ParsBlock_Chain24, ParsRia_ru, ParsKommersant_ru, \
-    ParsBinance, ParsForklog, all_source_news_lst
+from parser_news import all_source_news_lst
 from price_cripta import get_crypto_prices, get_crypto_news
 from save_parser import SaveParserBD, SaveGoldBD
 
