@@ -7,12 +7,12 @@ from textblob import TextBlob
 
 def get_crypto_news() -> list:
     """
-       Функция для парсинга
+    Функция для парсинга
 
-       Функция для парсинга заголовков новостей с сайта www.block-chain24.com;
+    Функция для парсинга заголовков новостей с сайта www.block-chain24.com;
 
-       Returns:
-           list: список заголовков новостей
+    Returns:
+       list: список заголовков новостей
     """
 
     url = "https://www.block-chain24.com/news?ysclid=m6ony52ur9108910355"
@@ -42,12 +42,12 @@ def get_crypto_news() -> list:
 # Получение данных о криптовалюте (пример с Binance)
 def get_crypto_prices() -> dict:
     """
-       Функция для парсинга
+    Функция для парсинга
 
-       Функция для парсинга цен на криптовалюту с api.binance.com;
+    Функция для парсинга цен на криптовалюту с api.binance.com;
 
-       Returns:
-           dict: словарь с названием криптовалюты и ее стоимости
+    Returns:
+       dict: словарь с названием криптовалюты и ее стоимости
     """
 
     url = "https://api.binance.com/api/v3/ticker/price"

@@ -1,4 +1,4 @@
-"""Модуль с моделями"""
+"""Модуль с моделями БД"""
 
 from datetime import datetime
 from flask_login import UserMixin
